@@ -7,18 +7,33 @@ Vue.use(Vuex, VueAxios, axios);
 
 export default new Vuex.Store({
   state:{
-    details:[]
+    products:[],
+    account:[]
   },
   actions:{
-    getDetails({commit}){
+    getProducts({commit}){
       axios
         .post("http://myApi/api/products")
-        .then(r => commit('SET_DETAILS', r.data))
+        .then(r => commit('SET_PRODUCTS', r.data))
+    },
+    getAccount({commit}, data){
+      axios
+        .post("http://myApi/api/login?email=" + data[0] + "&password=" + data[1])
+        .then(r => commit('SET_ACCOUNT', r.data))
+    },
+    removeAccount({commit}){
+      commit('DELETE_ACCOUNT');
     }
   },
   mutations:{
-    SET_DETAILS(state, details){
-      state.details = details;
+    SET_PRODUCTS(state, products){
+      state.products = products;
+    },
+    SET_ACCOUNT(state, account){
+      state.account = account;
+    },
+    DELETE_ACCOUNT(state){
+      state.account = {"status": "credential error"};
     }
   },
   getters:{
