@@ -45,6 +45,14 @@ export default new Vuex.Store({
 
       axios.post("http://myApi/api/products").then(r => commit('SET_PRODUCTS', r.data))
 
+    },
+   async  editProduct({commit},args){
+
+      let config = {headers: { Authorization: `Bearer ${args.token}` }};
+
+      await  axios.put("http://myApi/api/products/update", args.data , config);
+
+      axios.post("http://myApi/api/products").then(r => commit('SET_PRODUCTS', r.data))
 
     }
   },
@@ -60,11 +68,6 @@ export default new Vuex.Store({
     },
     SET_USER_DETAILS(state, userDetails){
       state.userDetails = userDetails;
-    }
-  },
-  getters:{
-    GET_PRODUCTS(state){
-      return state.products;
     }
   }
 })
