@@ -103,8 +103,13 @@
       },
       getCookie,
       logout(){
-        removeCookie('token');
-        this.removeCredential();
+        this.$bvModal.msgBoxConfirm('Are you sure you want to logout ?')
+          .then(value => {
+            if (value === true) {
+              removeCookie('token');
+              this.removeCredential();
+            }
+          });
       }
     },
     watch: {
