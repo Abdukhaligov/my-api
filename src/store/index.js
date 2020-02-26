@@ -1,58 +1,58 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-import VueAxios from 'vue-axios'
 
-Vue.use(Vuex, VueAxios, axios);
+Vue.use(Vuex, axios);
 
 export default new Vuex.Store({
   state:{
     products:[],
     credential:[],
-    userDetails:[]
+    userDetails:[],
+    url: 'http://myApi/api/'
   },
   actions:{
-    setProducts({commit}){
+    setProducts({commit,state}){
       axios
-        .post("http://myApi/api/products")
+        .post( state.url + "products")
         .then(r => commit('SET_PRODUCTS', r.data));
     },
-    getCredential({commit}, data){
+    getCredential({commit,state}, data){
       axios
-        .post("http://myApi/api/login?email=" + data[0] + "&password=" + data[1])
+        .post( state.url + "login?email=" + data[0] + "&password=" + data[1])
         .then(r => commit('SET_CREDENTIAL', r.data));
     },
     removeCredential({commit}){
       commit('DELETE_CREDENTIAL');
     },
-    getUserDetails({commit}, token){
+    getUserDetails({commit,state}, token){
       let config = {headers: { Authorization: `Bearer ${token}` }};
       axios
-        .post("http://myApi/api/details",'',config)
+        .post( state.url + "details",'',config)
         .then(r => commit('SET_USER_DETAILS', r.data));
     },
-    async setNewProduct({commit}, args){
+    async setNewProduct({commit,state}, args){
       let config = {headers: { Authorization: `Bearer ${args.token}` }};
 
-      await axios.post("http://myApi/api/products/create", args.product, config);
+      await axios.post( state.url + "products/create", args.product, config);
 
-      axios.post("http://myApi/api/products").then(r => commit('SET_PRODUCTS', r.data))
+      axios.post( state.url + "products").then(r => commit('SET_PRODUCTS', r.data))
     },
-   async  deleteProduct({commit},args){
+   async  deleteProduct({commit,state},args){
       let config = {headers: { Authorization: `Bearer ${args.token}` }};
 
-      await  axios.put("http://myApi/api/products/delete/" + args.id, '', config);
+      await  axios.put( state.url + "products/delete/" + args.id, '', config);
 
-      axios.post("http://myApi/api/products").then(r => commit('SET_PRODUCTS', r.data))
+      axios.post( state.url + "products").then(r => commit('SET_PRODUCTS', r.data))
 
     },
-   async  editProduct({commit},args){
+   async  editProduct({commit,state},args){
 
       let config = {headers: { Authorization: `Bearer ${args.token}` }};
 
-      await  axios.put("http://myApi/api/products/update", args.data , config);
+      await  axios.put( state.url + "products/update", args.data , config);
 
-      axios.post("http://myApi/api/products").then(r => commit('SET_PRODUCTS', r.data))
+      axios.post( state.url + "products").then(r => commit('SET_PRODUCTS', r.data))
 
     }
   },
